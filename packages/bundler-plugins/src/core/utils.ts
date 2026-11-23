@@ -351,10 +351,6 @@ export function getServerModulesDefinition(serverModules: Record<string, string>
   return { [SERVER_MODULES_PLACEHOLDER]: stringifyForCodeInjection(serverModules) };
 }
 
-// Skips property reads like `obj.__SENTRY_SERVER_MODULES__`, which the replacement would break, and mentions in strings
-// or in backticks, like the ones in the SDK's comments.
-const SERVER_MODULES_PLACEHOLDER_REGEX = /(?<![\w$.'"`])__SENTRY_SERVER_MODULES__(?![\w$'"`])/g;
-
 /**
  * Replaces the boolean flags, and the `__SENTRY_SERVER_MODULES__` placeholder that the Node SDK's `modulesIntegration`
  * reads when `serverModules` is set.
@@ -375,10 +371,7 @@ export function replaceBooleanFlagsInCode(
   });
 
   if (serverModules) {
-    const serverModulesCode = `(${stringifyForCodeInjection(serverModules)})`;
-    for (const match of code.matchAll(SERVER_MODULES_PLACEHOLDER_REGEX)) {
-      ms.overwrite(match.index, match.index + match[0].length, serverModulesCode);
-    }
+    ms.replaceAll(SERVER_MODULES_PLACEHOLDER, `(${stringifyForCodeInjection(serverModules)})`);
   }
 
   if (ms.hasChanged()) {

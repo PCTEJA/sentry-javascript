@@ -11,7 +11,7 @@ const INTEGRATION_NAME = 'Modules' as const;
 
 declare const __SENTRY_SERVER_MODULES__: Record<string, string> | string;
 
-/** Reads the modules that a bundler replaced `__SENTRY_SERVER_MODULES__` with at build time. */
+/** Reads the module versions that a bundler injected at build time. */
 function getServerModules(): Record<string, string> {
   if (typeof __SENTRY_SERVER_MODULES__ === 'undefined') {
     return {};

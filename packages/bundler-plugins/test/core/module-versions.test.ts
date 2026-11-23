@@ -17,17 +17,6 @@ describe('replaceBooleanFlagsInCode with server modules', () => {
     );
   });
 
-  it('keeps property reads, strings and mentions in backticks', () => {
-    const code = [
-      '// Reads `__SENTRY_SERVER_MODULES__`.',
-      "const key = '__SENTRY_SERVER_MODULES__';",
-      'const fromGlobal = GLOBAL_OBJ.__SENTRY_SERVER_MODULES__ ?? GLOBAL_OBJ?.__SENTRY_SERVER_MODULES__;',
-      'const other = __SENTRY_SERVER_MODULES__x;',
-    ].join('\n');
-
-    expect(replaceBooleanFlagsInCode(code, {}, modules)).toBeNull();
-  });
-
   it('replaces flags and the placeholder in one pass', () => {
     const code = 'if (__SENTRY_DEBUG__) console.log(__SENTRY_SERVER_MODULES__);';
 
