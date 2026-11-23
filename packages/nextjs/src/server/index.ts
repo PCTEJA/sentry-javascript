@@ -12,17 +12,9 @@ import {
   GLOBAL_OBJ,
 } from '@sentry/core';
 import type { NodeClient, NodeOptions } from '@sentry/node';
-import {
-  _INTERNAL_installTunnelHooks as installTunnelHooks,
-  addServerTimingTraceHeader,
-  getDefaultIntegrations,
-  httpIntegration,
-  init as nodeInit,
-} from '@sentry/node';
-import {
-  _INTERNAL_forwardTunnelRequest as forwardTunnelRequest,
-  _INTERNAL_setTunnelDefaults as setTunnelDefaults,
-} from '@sentry/core/server';
+import { addServerTimingTraceHeader, getDefaultIntegrations, httpIntegration, init as nodeInit } from '@sentry/node';
+import { forwardTunnelRequest, setTunnelDefaults } from '@sentry/core/server';
+import { instrumentTunnelServers } from '@sentry/server-utils';
 import { DEBUG_BUILD } from '../common/debug-build';
 import { getInjectedBasePath } from '../common/utils/basePath';
 import { devErrorSymbolicationEventProcessor } from '../common/devErrorSymbolicationEventProcessor';
@@ -182,7 +174,7 @@ export function init(userOptions: NodeOptions): NodeClient | undefined {
   // keeps the function invocation open until it times out. `vercel dev` gets no generated route, so it keeps the hook.
   const isServedByVercelTunnelRoute = !!process.env.VERCEL && process.env.VERCEL_ENV !== 'development';
   if (tunnelRoute && !isServedByVercelTunnelRoute) {
-    installTunnelHooks();
+    instrumentTunnelServers();
   }
 
   if (DEBUG_BUILD && opts.debug) {
