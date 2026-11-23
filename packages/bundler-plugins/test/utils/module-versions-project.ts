@@ -24,10 +24,7 @@ export function createModuleVersionsProject(): string {
   fs.writeFileSync(
     path.join(root, 'entry.js'),
     [
-      '// Reads `__SENTRY_SERVER_MODULES__`, or `globalThis.__SENTRY_SERVER_MODULES__` without a build-time value.',
-      "globalThis.modules = typeof __SENTRY_SERVER_MODULES__ !== 'undefined'",
-      '  ? __SENTRY_SERVER_MODULES__',
-      '  : globalThis.__SENTRY_SERVER_MODULES__;',
+      "globalThis.modules = typeof __SENTRY_SERVER_MODULES__ !== 'undefined' ? __SENTRY_SERVER_MODULES__ : undefined;",
       '',
     ].join('\n'),
   );

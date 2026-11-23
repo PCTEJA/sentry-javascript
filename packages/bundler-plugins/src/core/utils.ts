@@ -351,8 +351,8 @@ export function getServerModulesDefinition(serverModules: Record<string, string>
   return { [SERVER_MODULES_PLACEHOLDER]: stringifyForCodeInjection(serverModules) };
 }
 
-// Skips property reads like `GLOBAL_OBJ.__SENTRY_SERVER_MODULES__`, which read the global that Turbopack builds set,
-// and mentions in strings or in backticks, like the ones in the SDK's comments.
+// Skips property reads like `obj.__SENTRY_SERVER_MODULES__`, which the replacement would break, and mentions in strings
+// or in backticks, like the ones in the SDK's comments.
 const SERVER_MODULES_PLACEHOLDER_REGEX = /(?<![\w$.'"`])__SENTRY_SERVER_MODULES__(?![\w$'"`])/g;
 
 /**

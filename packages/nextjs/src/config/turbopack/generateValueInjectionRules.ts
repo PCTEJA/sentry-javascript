@@ -1,6 +1,5 @@
 import * as path from 'path';
 import type { VercelCronsConfig } from '../../common/types';
-import { getInstalledModules } from '@sentry/bundler-plugins/loader-utils';
 import type { RouteManifest } from '../manifest/types';
 import type { JSONValue, TurbopackMatcherWithRule } from '../types';
 import type { TunnelRouteInjectedValues } from '../withSentryConfig/tunnel';
@@ -58,9 +57,6 @@ export function generateValueInjectionRules({
   if (distDirName) {
     serverValues._sentryRewriteFramesDistDir = distDirName;
   }
-
-  // Turbopack runs no Sentry bundler plugin, which injects these for webpack.
-  serverValues.__SENTRY_SERVER_MODULES__ = getInstalledModules(process.cwd());
 
   if (Object.keys(isomorphicValues).length > 0) {
     clientValues = { ...clientValues, ...isomorphicValues };
