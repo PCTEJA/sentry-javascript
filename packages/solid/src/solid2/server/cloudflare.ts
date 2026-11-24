@@ -2,6 +2,7 @@ import type { CloudflareOptions } from '@sentry/cloudflare';
 import { defineCloudflareOptions as defineCloudflareOptionsBase } from '@sentry/cloudflare';
 import { _INTERNAL_captureOptionsSetByUser, applySdkMetadata } from '@sentry/core';
 import { solidServerErrorsIntegration } from './errors';
+import { solidServerObserveIntegration } from './observe';
 
 /**
  * Defines the Sentry options for a Solid 2 app on Cloudflare Workers, like `defineCloudflareOptions` of
@@ -36,7 +37,7 @@ export const defineCloudflareOptions: typeof defineCloudflareOptionsBase = (
     if (opts.defaultIntegrations === undefined) {
       const userIntegrations = opts.integrations;
       opts.integrations = defaults => {
-        const withSolid = [...defaults, solidServerErrorsIntegration()];
+        const withSolid = [...defaults, solidServerErrorsIntegration(), solidServerObserveIntegration()];
         return typeof userIntegrations === 'function'
           ? userIntegrations(withSolid)
           : [...withSolid, ...(userIntegrations ?? [])];
